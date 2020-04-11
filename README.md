@@ -24,7 +24,7 @@ bin/kafka-server-start.sh config/server.properties
 * To see if you correctly implemented the server, use the command `bin/kafka-console-consumer.sh --bootstrap-server localhost:<your-port-number> --topic <your-topic-name> --from-beginning` to see your output.
 
 Take a screenshot of your kafka-consumer-console output. You will need to include this screenshot as part of your project submission.
-
+![Kafka Console Conumser Screenshot](kafka-console-consumer.png)
 
 ## Step 2
 * Apache Spark already has an integration with Kafka brokers, so we would not normally need a separate Kafka consumer. However, we are going to ask you to create one anyway. Why? We'd like you to create the consumer to demonstrate your understanding of creating a complete Kafka Module (producer and consumer) from scratch. In production, you might have to create a dummy producer or consumer to just test out your theory and this will be great practice for that.
