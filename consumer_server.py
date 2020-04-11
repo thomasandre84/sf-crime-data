@@ -1,8 +1,13 @@
 from kafka import KafkaConsumer
 import time
 
+TOPIC = "police.department.service.calls"
+
 
 class Consumer(KafkaConsumer):
+    '''
+    A Kafka Consumer Class
+    '''
 
     def __init__(self, topic):
         self.consumer = KafkaConsumer(
@@ -14,8 +19,12 @@ class Consumer(KafkaConsumer):
         self.consumer.subscribe(topics=topic)
 
     def consume(self):
+        '''
+        Consume data from a Kafka Topic
+        :return:
+        '''
         while True:
-            for metadata,records in self.consumer.poll().items():
+            for metadata, records in self.consumer.poll().items():
                 if records:
                     for record in records:
                         print(record.value)
@@ -24,5 +33,5 @@ class Consumer(KafkaConsumer):
 
 
 if __name__ == "__main__":
-    consumer = Consumer("police.service.calls")
+    consumer = Consumer(TOPIC)
     consumer.consume()
