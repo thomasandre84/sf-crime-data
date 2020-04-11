@@ -23,6 +23,7 @@ schema = StructType([
     StructField("common_location", StringType(), True)
 ])
 
+
 def run_spark_job(spark):
     # TODO Create Spark Configuration
     # Create Spark configurations with max offset of 200 per trigger
@@ -36,6 +37,7 @@ def run_spark_job(spark):
         .option("maxOffsetsPerTrigger", 200) \
         .option("stopGracefullyOnShutdown", "true") \
         .load()
+
 
     # Show schema for the incoming resources for checks
     df.printSchema()
@@ -98,6 +100,7 @@ if __name__ == "__main__":
         .builder \
         .master("local[*]") \
         .appName("KafkaSparkStructuredStreaming") \
+        .config("spark.ui.port", 3000) \
         .getOrCreate()
 
     logger.info("Spark started")

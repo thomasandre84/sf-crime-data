@@ -33,17 +33,59 @@ Take a screenshot of your kafka-consumer-console output. You will need to includ
 ```
 spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.4 --master local[*] data_stream.py
 ```
+Update: changed the version locally to make it run:
+``` 
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.4 --master local[*] data_stream.py
+```
 * Take a screenshot of your progress reporter after executing a Spark job. You will need to include this screenshot as part of your project submission.
+![Progress Reporter](progress_reporter.png)
 * Take a screenshot of the Spark Streaming UI as the streaming continues. You will need to include this screenshot as part of your project submission.
-
+![Spark Streaming UI](spark-streaming-ui.png)
 ## Step 3
-* Write the answers to these questions in the README.md doc of your GitHub repo:
+Write the answers to these questions in the README.md doc of your GitHub repo:
 
-How did changing values on the SparkSession property parameters affect the throughput and latency of the data?
-* < answer >
+1. How did changing values on the SparkSession property parameters affect the throughput and latency of the data?
+    * Comparing with these 3 values as default with 200 "maxOffsetsPerTrigger":
+        * "numInputRows" : 200,
+        * "inputRowsPerSecond" : 24.88490730372029,
+        * "processedRowsPerSecond" : 28.82259691598213,
+    * setting "maxOffsetsPerTrigger" from 200 to 2000 
+      * "numInputRows" : 2000,
+      * "inputRowsPerSecond" : 188.53695324283558,
+      * "processedRowsPerSecond" : 239.72192256981901,
+    * setting "maxOffsetsPerTrigger" from 200 to 100 
+      * "numInputRows" : 100,
+      * "inputRowsPerSecond" : 5.914709883480215,
+      * "processedRowsPerSecond" : 8.300821781356355,
+   
+    * tuning the offsetPerTrigger can affect the throughput - a huger number of input rows seems to increase the throughput, since the batches are bigger.
  
-What were the 2-3 most efficient SparkSession property key/value pairs? Through testing multiple variations on values, how can you tell these were the most optimal?
-* < answer >
+2. What were the 2-3 most efficient SparkSession property key/value pairs? Through testing multiple variations on values, how can you tell these were the most optimal?
+    * maxOffsetsPerTrigger -> see first answer
+    * spark.memory.fraction according to: https://spark.apache.org/docs/latest/tuning.html but seems not have much affect on small batches of 200 rows
+      * setting it to 50
+        * "numInputRows" : 200,
+        * "inputRowsPerSecond" : 14.571948998178506,
+        * "processedRowsPerSecond" : 21.94426157559798,
+      * setting it to 1000 
+        * "numInputRows" : 200,
+        * "inputRowsPerSecond" : 21.8435998252512,
+        * "processedRowsPerSecond" : 14.867677668748142,
+      * setting it to 500
+        * "numInputRows" : 200,
+        * "inputRowsPerSecond" : 17.452006980802793,
+        * "processedRowsPerSecond" : 18.684603886397607,
+    * spark.default.parallelism according to: https://spark.apache.org/docs/latest/tuning.html seems to vary the processing a lot:
+      * setting it to 10:
+        * "numInputRows" : 200,
+        * "inputRowsPerSecond" : 42.78990158322635,
+        * "processedRowsPerSecond" : 31.565656565656564,
+      * setting it to 1:
+        * "numInputRows" : 200,
+        * "inputRowsPerSecond" : 23.84642899725766,
+        * "processedRowsPerSecond" : 39.960039960039964,
+
+      
 ## Project Submission
 You will submit a link to your GitHub repo, with the files you've created: `producer_server.py, kafka_server.py, data_stream.py`, and `consumer_server.py`. The `README.md` doc in your GitHub repo should contain your responses to the two questions from Step 3.
 
